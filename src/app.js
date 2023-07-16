@@ -21,25 +21,26 @@ function formatDate(timestamp) {
   return `${day} ${hours}:${minutes}`;
 }
 
-function displayForecast() {
-  let forecastElement = document.querySelector("#forecast");
-  let days = ["Sat", "Sun", "Mon", "Tue"];
-  let forecastHTML = `  <div class="row">`;
+function displayForecast(response) {
+  let forecast = response.data.daily;
 
-  days.forEach(function (day) {
+  let forecastElement = document.querySelector("#forecast");
+
+  let forecastHTML = `<div class="row">`;
+  forecast.forEach(function (forecastDay) {
     forecastHTML =
       forecastHTML +
       `
     <div class="col-2">
-                <div class="weather-forecast-date">${day}</div>
-                <img
-                  src="http://openweathermap.org/img/wn/50d@2x.png"
-                  alt=""
-                  width="40"
+          <div class="weather-forecast-date">${forecastDay.dt}</div>
+             <img
+                src="http://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png"
+                alt=""
+                width="40"
                 />
                 <div class="weather-forecast-temperature">
-                  <span class="weather-forecast-temperature-maximum">18°</span>
-                  <span class="weather-forecast-temperature-minimum">12°</span>
+                  <span class="weather-forecast-temperature-max">${forecastDay.temp.max}°</span>
+                  <span class="weather-forecast-temperature-min">${forecastDay.temp.min}°</span>
                 </div>
               </div>
             `;
@@ -74,7 +75,7 @@ function displayTemperature(response) {
 }
 
 function search(city) {
-  let apiKey = "36811a910edc7556e3f396c180198841";
+  let apiKey = "8cac06f7ab6c10287cd06a316ff84a57";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayTemperature);
 }
@@ -110,4 +111,3 @@ let celsiusLink = document.querySelector("#celsius-link");
 celsiusLink.addEventListener("click", displayCelsiusTemperature);
 
 search("New York");
-displayForecast();
